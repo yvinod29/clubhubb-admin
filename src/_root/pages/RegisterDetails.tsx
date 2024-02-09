@@ -7,7 +7,6 @@ import DownloadExcel from '@/components/shared/DownloadExcel';
 import PinkCheckbox from '@/components/ui/PinkCheckbox';
 import { Switch } from '@mui/material';
 
-
 type StudentFormData = {
   name: string;
   email: string;
@@ -31,7 +30,7 @@ const RegisterDetails = () => {
   const [UpdateCheckin] = useUpdatecheckinMutation();
   const [posts, setPosts] = useState<Post | undefined>();
   const [updateStatus] = useUpdateStatusMutation(); // Fix typo here
-
+  const [memberCounts, setMemberCounts] = useState<{ [userId: string]: number }>({});
 
   const { eventId } = useParams();
 
@@ -60,6 +59,27 @@ const RegisterDetails = () => {
       console.error('Error fetching events:', error);
     }
   };
+
+  useEffect(() => {
+    fetchData();
+  }, [GetEventById, eventId]);
+
+  useEffect(() => {
+    // Calculate member counts when posts change
+    if (posts) {
+      const counts: { [userId: string]: number } = {};
+      posts.registeredUserIds.forEach(user => {
+        let memberCount = 0;
+        for (const key in user.studentFormData.extraFields) {
+          if (key.startsWith('team-member-')) {
+            memberCount++;
+          }
+        }
+        counts[user.userId] = memberCount > 0 ? memberCount : 1;
+      });
+      setMemberCounts(counts);
+    }
+  }, [posts]);
 
   const handleCheckboxChange = async (userId: string, eventId: string, check: boolean) => {
     console.log(`Checkbox selected for user with ID: ${userId}`);
@@ -116,12 +136,13 @@ const RegisterDetails = () => {
     }
   };
 
-
-
-
-  useEffect(() => {
-    fetchData();
-  }, [GetEventById, eventId]);
+  const getTotalMembers = () => {
+    let totalMembers = 0;
+    for (const userId in memberCounts) {
+      totalMembers += memberCounts[userId];
+    }
+    return totalMembers;
+  };
 
   return (
     <>
@@ -142,6 +163,7 @@ const RegisterDetails = () => {
                 </div>
                 <DownloadExcel posts={posts} />
 
+                <p>Total Members: {getTotalMembers()}</p>
 
                 <div style={{ overflowX: 'auto' }}>
                   <table style={{ width: '100%', borderCollapse: 'collapse', marginTop: '10px' }}>
@@ -149,6 +171,7 @@ const RegisterDetails = () => {
                       <tr>
                         <th style={{ padding: '8px', textAlign: 'left', borderBottom: '1px solid #ddd', borderRight: '1px solid #ddd', borderLeft: '1px solid #ddd', borderTop: '1px solid #ddd' }}>Name</th>
                         <th style={{ padding: '8px', textAlign: 'left', borderBottom: '1px solid #ddd', borderRight: '1px solid #ddd', borderTop: '1px solid #ddd' }}>Checkin</th>
+                        <th style={{ padding: '8px', textAlign: 'left', borderBottom: '1px solid #ddd', borderRight: '1px solid #ddd', borderTop: '1px solid #ddd' }}>Members</th>
                       </tr>
                     </thead>
                     <tbody style={{ overflowY: 'auto', maxHeight: '200px' }}>
@@ -170,22 +193,14 @@ const RegisterDetails = () => {
                                     {user.studentFormData.name} </p></li>
                                   <li><strong>Email:</strong><p>{user.studentFormData.email}</p></li>
 
-                                  {typeof user.studentFormData.extraFields === 'object' ? (
-                                    Object.entries(user.studentFormData.extraFields).map(([key, value], index) => (
-                                      <li key={index}>
-                                        <div>
-                                          <strong>{key}:</strong>
-                                          <p>
-                                            {`${value}`} {/* Convert value to string */}
-                                          </p>
-                                        </div>
-                                      </li>
-                                    ))
-                                  ) : (
-                                    <li>No extra fields available</li>
-                                  )}
-
-
+                                  {Object.entries(user.studentFormData.extraFields).map(([key, value], index) => (
+                                    <li key={index}>
+                                      <div>
+                                        <strong>{key}:</strong>
+                                        <p>{typeof value === 'object' ? JSON.stringify(value) : value}</p>
+                                      </div>
+                                    </li>
+                                  ))}
 
                                 </ul>
                               </PopoverContent>
@@ -197,19 +212,21 @@ const RegisterDetails = () => {
                               onChange={(e) => handleCheckboxChange(user.userId, eventId, e.target.checked)}
                             />
                           </td>
+                          <td style={{ padding: '8px', borderRight: '1px solid #ddd' }}>
+                            {memberCounts[user.userId]}
+                          </td>
                         </tr>
                       ))}
                     </tbody>
                   </table>
                 </div>
               </div>
-
             </div>
           </div>
           <div className="m-5 p-6 bottom-0 md:hidden "
-                        style={{ color: "black" }}>
-                        <p>bottom bar</p>
-                    </div>
+            style={{ color: "black" }}>
+            <p>bottom bar</p>
+          </div>
         </div>
       ) : (
         <div>
