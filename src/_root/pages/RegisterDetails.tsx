@@ -195,7 +195,7 @@ const RegisterDetails = () => {
                                     {user.studentFormData.name} </p></li>
                                   <li><strong>Email:</strong><p>{user.studentFormData.email}</p></li>
                                     <li><strong>collegeName:</strong><p>{user.studentFormData.collegeName}</p></li>
-                                    <li><strong>phoneNumber:</strong><p>{user.studentFormData.phoneNUmber}</p></li>
+                                    <li><strong>phoneNumber:</strong><p>{user.studentFormData.phoneNumber}</p></li>
 
                                   {Object.entries(user.studentFormData.extraFields).map(([key, value], index) => (
                                     <li key={index}>
