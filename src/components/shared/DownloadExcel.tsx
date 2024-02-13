@@ -5,6 +5,8 @@ import { Button } from "../ui/button";
 type StudentFormData = {
   name: string;
   email: string;
+  collegeName:string;
+  phoneNumber:string;
   extraFields: { [key: string]: string }[] ;
 };
 
@@ -30,6 +32,8 @@ const DownloadExcel: React.FC<DownloadExcelProps> = ({ posts }) => {
         Index: (index + 1).toString(),
         Name: user.studentFormData.name,
         Email: user.studentFormData.email,
+        CollegeName:user.studentFormData.collegeName,
+        phoneNumber:user.studentFormData.phoneNumber
       };
 
       if (typeof user.studentFormData.extraFields === 'object' && user.studentFormData.extraFields !== null) {
