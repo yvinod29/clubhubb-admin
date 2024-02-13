@@ -10,6 +10,8 @@ import { Switch } from '@mui/material';
 type StudentFormData = {
   name: string;
   email: string;
+  collegeName:string;
+  phoneNumber:string;
   extraFields: { [key: string]: string }[];
 };
 
@@ -192,6 +194,8 @@ const RegisterDetails = () => {
                                   <li><strong>Name:</strong><p>
                                     {user.studentFormData.name} </p></li>
                                   <li><strong>Email:</strong><p>{user.studentFormData.email}</p></li>
+                                    <li><strong>collegeName:</strong><p>{user.studentFormData.collegeName}</p></li>
+                                    <li><strong>phoneNumber:</strong><p>{user.studentFormData.phoneNUmber}</p></li>
 
                                   {Object.entries(user.studentFormData.extraFields).map(([key, value], index) => (
                                     <li key={index}>
