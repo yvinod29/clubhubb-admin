@@ -171,7 +171,7 @@ const RegisterDetails = () => {
             <div className="md:flex flex-col md:m-5 md:w-8/12">
               <div>
                 <h3 style={{ fontWeight: 'bold', fontSize: '18px', margin: '10px 0' }}>Registered Students</h3>
-              <div className='flex felx-row gap-4'>
+              <div className='flex felx-row gap-4 mb-4'>
 
                 <div>
                   <Switch
@@ -189,7 +189,7 @@ const RegisterDetails = () => {
 
                 <div className="explore-container">
                   <div className="explore-inner_container">
-                    <h2 className="h3-bold md:h2-bold w-full">Search Posts</h2>
+                    <h2 className="h3-bold md:h2-bold w-full">Search </h2>
                     <div className="flex gap-2 px-4 w-full rounded-lg bg-dark-4">
                       <img
                         src="/assets/icons/search.svg"
