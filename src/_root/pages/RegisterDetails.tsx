@@ -167,7 +167,7 @@ const RegisterDetails = () => {
     <>
       {eventId ? (
         <div className="container mx-auto">
-          <div className="flex flex-col text-justify md:flex-row m-5">
+          <div className="flex flex-col text-justify md:flex-row ">
             <div className="md:flex flex-col md:m-5 md:w-8/12">
               <div>
                 <h3 style={{ fontWeight: 'bold', fontSize: '18px', margin: '10px 0' }}>Registered Students</h3>
