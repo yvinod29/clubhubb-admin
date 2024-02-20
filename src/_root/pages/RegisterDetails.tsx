@@ -5,13 +5,13 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Button } from '@/components/ui/button';
 import DownloadExcel from '@/components/shared/DownloadExcel';
 import PinkCheckbox from '@/components/ui/PinkCheckbox';
-import { Switch } from '@mui/material';
+import { Input, Switch } from '@mui/material';
 
 type StudentFormData = {
   name: string;
   email: string;
-  collegeName:string;
-  phoneNumber:string;
+  collegeName: string;
+  phoneNumber: string;
   extraFields: { [key: string]: string }[];
 };
 
@@ -35,6 +35,14 @@ const RegisterDetails = () => {
   const [memberCounts, setMemberCounts] = useState<{ [userId: string]: number }>({});
 
   const { eventId } = useParams();
+
+
+  const [searchValue, setSearchValue] = useState('');
+  useEffect(() => {
+    console.log(searchValue)
+
+  },[searchValue])
+
 
   const fetchData = async () => {
     try {
@@ -146,6 +154,15 @@ const RegisterDetails = () => {
     return totalMembers;
   };
 
+
+  const filteredUserIds = posts?.registeredUserIds.filter((user) => {
+    const fullName = user.studentFormData.name.toLowerCase();
+    const email = user.studentFormData.email.toLowerCase();
+    const lowerCaseSearchValue = searchValue.toLowerCase();
+
+    return fullName.includes(lowerCaseSearchValue) || email.includes(lowerCaseSearchValue);
+  });
+
   return (
     <>
       {eventId ? (
@@ -167,6 +184,29 @@ const RegisterDetails = () => {
 
                 <p>Total Members: {getTotalMembers()}</p>
 
+                <div className="explore-container">
+                  <div className="explore-inner_container">
+                    <h2 className="h3-bold md:h2-bold w-full">Search Posts</h2>
+                    <div className="flex gap-2 px-4 w-full rounded-lg bg-dark-4">
+                      <img
+                        src="/assets/icons/search.svg"
+                        width={24}
+                        height={24}
+                        alt="search"
+                      />
+                      <Input
+                        type="text"
+                        placeholder="Search"
+                        className="explore-search"
+                        value={searchValue}
+                        onChange={(e) => {
+                          const { value } = e.target;
+                          setSearchValue(value);
+                        }}
+                      />
+                    </div>
+                  </div>
+                </div>
                 <div style={{ overflowX: 'auto' }}>
                   <table style={{ width: '100%', borderCollapse: 'collapse', marginTop: '10px' }}>
                     <thead>
@@ -177,8 +217,8 @@ const RegisterDetails = () => {
                       </tr>
                     </thead>
                     <tbody style={{ overflowY: 'auto', maxHeight: '200px' }}>
-                      {posts?.registeredUserIds.map((user) => (
-                        <tr key={user.userId} style={{ borderBottom: '1px solid #ddd' }}>
+            {filteredUserIds?.map((user) => (
+              <tr key={user.userId} style={{ borderBottom: '1px solid #ddd' }}>
                           <td style={{ padding: '8px', borderRight: '1px solid #ddd', borderLeft: '1px solid #ddd', maxWidth: '200px', overflow: 'auto' }}>
                             {user.studentFormData.name}
                             <br />
@@ -194,8 +234,8 @@ const RegisterDetails = () => {
                                   <li><strong>Name:</strong><p>
                                     {user.studentFormData.name} </p></li>
                                   <li><strong>Email:</strong><p>{user.studentFormData.email}</p></li>
-                                    <li><strong>collegeName:</strong><p>{user.studentFormData.collegeName}</p></li>
-                                    <li><strong>phoneNumber:</strong><p>{user.studentFormData.phoneNumber}</p></li>
+                                  <li><strong>collegeName:</strong><p>{user.studentFormData.collegeName}</p></li>
+                                  <li><strong>phoneNumber:</strong><p>{user.studentFormData.phoneNumber}</p></li>
 
                                   {Object.entries(user.studentFormData.extraFields).map(([key, value], index) => (
                                     <li key={index}>
