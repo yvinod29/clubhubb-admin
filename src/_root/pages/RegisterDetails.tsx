@@ -171,6 +171,8 @@ const RegisterDetails = () => {
             <div className="md:flex flex-col md:m-5 md:w-8/12">
               <div>
                 <h3 style={{ fontWeight: 'bold', fontSize: '18px', margin: '10px 0' }}>Registered Students</h3>
+              <div className='flex felx-row gap-4'>
+
                 <div>
                   <Switch
                     type="checkbox"
@@ -181,6 +183,7 @@ const RegisterDetails = () => {
                   <label>Activate Registrations</label>
                 </div>
                 <DownloadExcel posts={posts} />
+          </div>
 
                 <p>Total Members: {getTotalMembers()}</p>
 
@@ -203,6 +206,7 @@ const RegisterDetails = () => {
                           const { value } = e.target;
                           setSearchValue(value);
                         }}
+                        style={{ color: 'white' }}
                       />
                     </div>
                   </div>
